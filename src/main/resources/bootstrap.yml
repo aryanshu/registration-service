@@ -1,7 +1,0 @@
-spring:
-  application:
-    name: application
-  cloud:
-    vault:
-      token: hvs.f6vzX6TpXZY9QNuaxScsdzVt
-      uri: http://localhost:8200/

@@ -1,4 +1,5 @@
 server:
+  port: 8080
   error:
     include-message: always
     include-binding-errors: always
@@ -6,11 +7,12 @@ server:
 spring:
   datasource:
     password: Arya@123
-    url: jdbc:postgresql://localhost:5432/registration
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://172.17.0.2:5432/registration
     username: postgres
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -20,8 +22,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${username}
-    password: ${password}
+    username: match.mingle.today@gmail.com
+    password: tiwbieychvzgruvj
     properties:
       mail:
         smtp:
