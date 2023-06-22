@@ -24,4 +24,8 @@ public class ConfirmationTokenService {
         return confirmationTokenRepository.updateConfirmedAt(
                 token, LocalDateTime.now());
     }
+
+    public ConfirmationToken getUser(String token) {
+        return confirmationTokenRepository.findByToken(token).orElseThrow(()->new RuntimeException("token expired"));
+    }
 }

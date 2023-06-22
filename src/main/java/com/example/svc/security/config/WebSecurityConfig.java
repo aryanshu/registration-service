@@ -1,7 +1,12 @@
 package com.example.svc.security.config;
 
 import com.example.svc.appuser.AppUserService;
+import com.example.svc.config.KafkaProducer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.AllArgsConstructor;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -10,14 +15,21 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity
+@Service
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AppUserService appUserService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    private final KafkaProducer kafkaProducer;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -28,7 +40,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll()
                 .anyRequest()
                 .authenticated().and()
-                .formLogin();
+                .formLogin()
+                .successHandler((request, response, authentication) -> {
+                    // Produce Kafka message here
+                    String username = authentication.getName();
+                    Map<String,String> payload = new HashMap<>();
+                    payload.put("username",username);
+                    String kafkaPayload = new ObjectMapper().writeValueAsString(payload);
+                    kafkaProducer.sendMessage(kafkaPayload,"test");
+                    // Redirect to desired URL after successful login
+                    response.sendRedirect("/dashboard");
+                });
     }
 
     @Override
