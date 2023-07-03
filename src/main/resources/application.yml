@@ -5,6 +5,8 @@ server:
     include-binding-errors: always
 
 spring:
+  application:
+    name: registration-service
   kafka:
     consumer:
       bootstrap-servers: localhost:9092
@@ -19,7 +21,7 @@ spring:
   datasource:
     password: Arya@123
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/registration
+    url: jdbc:postgresql://localhost:5432/regis
     username: postgres
   jpa:
     hibernate:
@@ -34,7 +36,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: match.mingle.today@gmail.com
-    password:
+    password: tiwbieychvzgruvj
     properties:
       mail:
         smtp:
@@ -46,6 +48,16 @@ spring:
           connectiontimeout: 5000
           timeout: 3000
           writetimeout: 5000
+
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka
+#    fetch-registry: true
+#    register-with-eureka: true
+#    enabled: true
 
 
 

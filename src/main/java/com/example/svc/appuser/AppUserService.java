@@ -6,17 +6,21 @@ import lombok.AllArgsConstructor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
+import org.springframework.security.core.userdetails.User;
 
 @Service
 @AllArgsConstructor
-public class AppUserService implements UserDetailsService {
+public class AppUserService implements  UserDetailsService {
 
     private final static String USER_NOT_FOUND_MSG =
             "user with email %s not found";
@@ -26,12 +30,17 @@ public class AppUserService implements UserDetailsService {
     private final ConfirmationTokenService confirmationTokenService;
 
     @Override
-    public UserDetails loadUserByUsername(String email)
-            throws UsernameNotFoundException {
-        return appUserRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException(
-                                String.format(USER_NOT_FOUND_MSG, email)));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+//        return appUserRepository.findByEmail(email)
+//                .orElseThrow(() ->
+//                        new UsernameNotFoundException(
+//                                String.format(USER_NOT_FOUND_MSG, email)));
+
+        AppUser appUser = appUserRepository.findByEmail(email).orElseThrow();
+//        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
+        return new User(appUser.getUsername(),appUser.getPassword(),appUser.getAuthorities());
+
     }
 
     public String signUpUser(AppUser appUser) {
