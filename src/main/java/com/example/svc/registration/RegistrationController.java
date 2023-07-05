@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping(path = "api/v1")
+@RequestMapping(path = "/api/v1")
 @AllArgsConstructor
 public class RegistrationController {
     private final KafkaProducer producer;
@@ -39,7 +39,7 @@ public class RegistrationController {
         return registrationService.confirmToken(token);
     }
 
-    @GetMapping(path = "login/refresh")
+    @GetMapping(path = "/login/refresh")
     public void refreshtoken(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
 
     }
